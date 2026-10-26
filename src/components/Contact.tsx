@@ -2,10 +2,13 @@ import { useState, type ReactNode } from "react";
 import { Section } from "./ui/Section";
 import { Reveal } from "./ui/Reveal";
 import { profile } from "../data/profile";
+import { useLang } from "../i18n/LanguageProvider";
+import { ui } from "../i18n/strings";
 
 const { contact } = profile;
 
 function CopyEmailButton() {
+  const { t } = useLang();
   const [copied, setCopied] = useState(false);
 
   const copy = async () => {
@@ -14,7 +17,7 @@ function CopyEmailButton() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Clipboard API unavailable — fall back to selecting via prompt-free no-op
+      // Clipboard API unavailable — leave the address visible for manual copy
       setCopied(false);
     }
   };
@@ -23,7 +26,7 @@ function CopyEmailButton() {
     <button
       type="button"
       onClick={copy}
-      aria-label={copied ? "Email address copied" : "Copy email address"}
+      aria-label={copied ? t(ui.contact.copiedAria) : t(ui.contact.copyAria)}
       className="inline-flex items-center gap-2 rounded-lg border border-brand-200 bg-white px-3 py-2 text-sm font-medium text-brand-700 transition-colors hover:bg-brand-50 dark:border-brand-700 dark:bg-brand-900/50 dark:text-brand-100 dark:hover:bg-brand-800"
     >
       {copied ? (
@@ -31,7 +34,7 @@ function CopyEmailButton() {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M20 6 9 17l-5-5" />
           </svg>
-          Copied!
+          {t(ui.contact.copied)}
         </>
       ) : (
         <>
@@ -39,7 +42,7 @@ function CopyEmailButton() {
             <rect x="9" y="9" width="13" height="13" rx="2" />
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
           </svg>
-          Copy
+          {t(ui.contact.copy)}
         </>
       )}
     </button>
@@ -61,7 +64,7 @@ function ContactRow({ icon, label, value, href, external, action, muted }: Conta
     <a
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className={`font-medium transition-colors hover:text-brand-800 hover:underline underline-offset-4 dark:hover:text-white ${
+      className={`font-medium underline-offset-4 transition-colors hover:text-brand-900 hover:underline decoration-signal-500 dark:hover:text-white ${
         muted ? "text-brand-400 dark:text-brand-500" : "text-brand-700 dark:text-brand-100"
       }`}
     >
@@ -79,9 +82,7 @@ function ContactRow({ icon, label, value, href, external, action, muted }: Conta
         {icon}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-xs font-semibold uppercase tracking-wide text-brand-400 dark:text-brand-500">
-          {label}
-        </p>
+        <p className="font-mono text-xs text-brand-400 dark:text-brand-500">{label}</p>
         <p className="break-words">{valueEl}</p>
       </div>
       {action}
@@ -90,17 +91,20 @@ function ContactRow({ icon, label, value, href, external, action, muted }: Conta
 }
 
 export function Contact() {
+  const { t } = useLang();
+
   return (
     <Section
       id="contact"
-      eyebrow="Contact"
-      title="Let's work together"
-      intro="Open to part-time and freelance full-stack work. The fastest way to reach me is email or phone — I usually reply within a day."
+      index="05"
+      spine={t(ui.nav.contact)}
+      title={t(ui.sections.contact.title)}
+      intro={t(ui.sections.contact.intro)}
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <Reveal>
           <ContactRow
-            label="Email"
+            label={t(ui.contact.labels.email)}
             value={contact.email}
             href={`mailto:${contact.email}`}
             action={<CopyEmailButton />}
@@ -113,9 +117,9 @@ export function Contact() {
           />
         </Reveal>
 
-        <Reveal delay={80}>
+        <Reveal delay={70}>
           <ContactRow
-            label="Phone"
+            label={t(ui.contact.labels.phone)}
             value={contact.phone}
             href={`tel:${contact.phoneHref}`}
             icon={
@@ -126,9 +130,9 @@ export function Contact() {
           />
         </Reveal>
 
-        <Reveal delay={120}>
+        <Reveal delay={110}>
           <ContactRow
-            label="GitHub"
+            label={t(ui.contact.labels.github)}
             value={contact.githubLabel}
             href={contact.github}
             external
@@ -140,10 +144,10 @@ export function Contact() {
           />
         </Reveal>
 
-        <Reveal delay={160}>
+        <Reveal delay={150}>
           <ContactRow
-            label="LinkedIn"
-            value={contact.linkedinLabel}
+            label={t(ui.contact.labels.linkedin)}
+            value={t(contact.linkedinLabel)}
             muted
             icon={
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -154,11 +158,8 @@ export function Contact() {
         </Reveal>
       </div>
 
-      <Reveal delay={120}>
-        <p className="mt-6 text-sm text-brand-400 dark:text-brand-500">
-          Prefer a form? A contact form (e.g. Formspree) can be added here later — for now, email and
-          phone are the quickest ways to reach me.
-        </p>
+      <Reveal delay={110}>
+        <p className="mt-6 text-sm text-brand-400 dark:text-brand-500">{t(ui.contact.formNote)}</p>
       </Reveal>
     </Section>
   );

@@ -1,12 +1,17 @@
+import type { LS } from "../i18n/types";
+
+/** A skill is either a language-neutral tech name, or a localized phrase. */
+export type SkillItem = string | LS;
+
 export interface SkillGroup {
-  title: string;
-  items: string[];
+  title: LS;
+  items: SkillItem[];
 }
 
 // Grouped exactly as on the CV
 export const skillGroups: SkillGroup[] = [
   {
-    title: "Langages & Frameworks",
+    title: { fr: "Langages & Frameworks", en: "Languages & Frameworks" },
     items: [
       "Angular",
       "React",
@@ -19,11 +24,11 @@ export const skillGroups: SkillGroup[] = [
     ],
   },
   {
-    title: "Bases de données",
+    title: { fr: "Bases de données", en: "Databases" },
     items: ["SQL", "MariaDB", "PostgreSQL", "MongoDB"],
   },
   {
-    title: "Cloud & DevOps",
+    title: { fr: "Cloud & DevOps", en: "Cloud & DevOps" },
     items: [
       "AWS",
       "Microsoft Azure",
@@ -35,23 +40,23 @@ export const skillGroups: SkillGroup[] = [
     ],
   },
   {
-    title: "Systèmes & Réseau",
+    title: { fr: "Systèmes & Réseau", en: "Systems & Network" },
     items: [
-      "Admin. Windows Server",
+      { fr: "Admin. Windows Server", en: "Windows Server admin" },
       "VMware ESXi",
       "DNS",
       "Zabbix",
       "PowerShell",
-      "Sécurité des postes",
+      { fr: "Sécurité des postes", en: "Endpoint security" },
     ],
   },
   {
-    title: "Outils & Méthodes",
+    title: { fr: "Outils & Méthodes", en: "Tools & Methods" },
     items: [
       "Git",
-      "API REST",
+      { fr: "API REST", en: "REST API" },
       "OAuth2 / Exchange",
-      "IA générative & prompt engineering",
+      { fr: "IA générative & prompt engineering", en: "Generative AI & prompt engineering" },
     ],
   },
 ];
