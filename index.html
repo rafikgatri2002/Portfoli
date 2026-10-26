@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#1f3a56" />
+
+    <!-- Primary meta tags -->
+    <title>Rafik Gatri — Full-Stack & Systems Developer</title>
+    <meta
+      name="description"
+      content="Rafik Gatri — full-stack developer (Angular, React, React Native, Node.js, Python/FastAPI) and systems/DevOps engineer based in Tunis. Available for part-time and freelance work."
+    />
+    <meta name="author" content="Rafik Gatri" />
+    <meta
+      name="keywords"
+      content="Rafik Gatri, full-stack developer, Angular, React, React Native, Node.js, FastAPI, Python, DevOps, Docker, CI/CD, Tunis, Tunisia, freelance developer"
+    />
+    <link rel="canonical" href="https://rafikgatri.vercel.app/" />
+
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://rafikgatri.vercel.app/" />
+    <meta property="og:title" content="Rafik Gatri — Full-Stack & Systems Developer" />
+    <meta
+      property="og:description"
+      content="Full-stack developer & systems/DevOps engineer based in Tunis. Building complete management apps from data model to production. Open to part-time & freelance work."
+    />
+    <meta property="og:image" content="https://rafikgatri.vercel.app/og-image.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Rafik Gatri — Full-Stack & Systems Developer" />
+    <meta
+      name="twitter:description"
+      content="Full-stack developer & systems/DevOps engineer based in Tunis. Open to part-time & freelance work."
+    />
+    <meta name="twitter:image" content="https://rafikgatri.vercel.app/og-image.svg" />
+
+    <!-- Fonts: preconnect + Inter (sans) + Fraunces (display serif) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Avoid dark-mode flash: set theme class before paint -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("theme");
+          var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          if (stored === "dark" || (!stored && prefersDark)) {
+            document.documentElement.classList.add("dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

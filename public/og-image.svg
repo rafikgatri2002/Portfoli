@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1f3a56"/>
+      <stop offset="1" stop-color="#0a141f"/>
+    </linearGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <circle cx="1040" cy="120" r="220" fill="#ffffff" opacity="0.05"/>
+
+  <!-- Monogram badge -->
+  <rect x="80" y="90" width="92" height="92" rx="20" fill="#ffffff" opacity="0.1"/>
+  <text x="126" y="140" text-anchor="middle" dominant-baseline="central"
+        font-family="Georgia, serif" font-size="44" font-weight="700" fill="#ffffff">RG</text>
+
+  <!-- Availability pill -->
+  <rect x="80" y="236" width="360" height="46" rx="23" fill="#ffffff" opacity="0.08"/>
+  <circle cx="108" cy="259" r="7" fill="#34d399"/>
+  <text x="126" y="260" dominant-baseline="central"
+        font-family="'Segoe UI', Arial, sans-serif" font-size="20" fill="#dbe6f0">Open to part-time &amp; freelance work</text>
+
+  <!-- Name -->
+  <text x="78" y="360" font-family="Georgia, serif" font-size="92" font-weight="700" fill="#ffffff">Rafik Gatri</text>
+
+  <!-- Title -->
+  <text x="80" y="430" font-family="'Segoe UI', Arial, sans-serif" font-size="38" font-weight="600" fill="#9db4cb">Développeur Full Stack &amp; Systèmes</text>
+
+  <!-- Stack line -->
+  <text x="80" y="498" font-family="'Segoe UI', Arial, sans-serif" font-size="26" fill="#c4d6e5">Angular · React · React Native · Node.js · Python / FastAPI · DevOps</text>
+
+  <!-- Footer -->
+  <text x="80" y="566" font-family="'Segoe UI', Arial, sans-serif" font-size="24" fill="#6d8bac">Tunis, Tunisia · github.com/rafikgatri2002</text>
+</svg>
