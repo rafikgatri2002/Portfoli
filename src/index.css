@@ -4,7 +4,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Brand navy scale — anchored on CV colors #1f3a56 / #16293d */
+  /* Brand navy scale — anchored on CV colors #1f3a56 / #16293d (the ink) */
   --color-brand-50: #f2f6fa;
   --color-brand-100: #e3ecf3;
   --color-brand-200: #c4d6e5;
@@ -17,11 +17,31 @@
   --color-brand-900: #101e2d;
   --color-brand-950: #0a141f;
 
+  /* Signal amber — the single accent. Reserved for live/active states,
+     focus underlines, section index markers and the one hero highlight.
+     Deliberately not purple, not corporate blue, not terminal green. */
+  --color-signal-50: #fdf6ea;
+  --color-signal-100: #f8e7c6;
+  --color-signal-200: #efce91;
+  --color-signal-300: #e3b25f;
+  --color-signal-400: #d79a3c; /* dark-mode accent */
+  --color-signal-500: #c67f22; /* light-mode accent */
+  --color-signal-600: #a5631a;
+  --color-signal-700: #7f4b16;
+
+  /* Warm drafting-paper surface (light mode only, used sparingly) */
+  --color-paper: #faf8f3;
+
   /* Fonts */
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
     Roboto, Helvetica, Arial, sans-serif;
   --font-serif: "Fraunces", ui-serif, Georgia, Cambria, "Times New Roman",
     Times, serif;
+  /* Mono — technical metadata only (stack tokens, section index, periods).
+     Subject-appropriate for a systems developer; used sparingly, not as a
+     default label font. */
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "SF Mono",
+    Menlo, Consolas, "Liberation Mono", monospace;
 
   /* Motion */
   --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -69,9 +89,19 @@
 
   /* Visible, consistent keyboard focus */
   :focus-visible {
-    outline: 2px solid var(--color-brand-500);
+    outline: 2px solid var(--color-signal-500);
     outline-offset: 2px;
     border-radius: 4px;
+  }
+
+  .dark :focus-visible {
+    outline-color: var(--color-signal-400);
+  }
+
+  /* Branded text selection */
+  ::selection {
+    background-color: var(--color-signal-200);
+    color: var(--color-brand-900);
   }
 
   /* Anchor scroll offset so headings clear the sticky navbar */

@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { Section } from "./ui/Section";
 import { Reveal } from "./ui/Reveal";
 import { projects, type Project, type ProjectLink } from "../data/projects";
+import { useLang } from "../i18n/LanguageProvider";
+import { ui } from "../i18n/strings";
 
 /* ---------- Icons ---------- */
 
@@ -30,14 +32,55 @@ function ImageIcon() {
 }
 function LockIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <rect x="3" y="11" width="18" height="11" rx="2" />
       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
     </svg>
   );
 }
 
-/* ---------- Link renderer (graceful degradation) ---------- */
+/* ---------- Status ---------- */
+
+type Status = "live" | "confidential" | "soon";
+
+/** Derive a single status for the entry from its primary (demo) link. */
+function deriveStatus(project: Project): Status {
+  const demo = project.links.demo.type;
+  if (demo === "private") return "confidential";
+  if (demo === "live") return "live";
+  return "soon";
+}
+
+function StatusChip({ status }: { status: Status }) {
+  const { t } = useLang();
+  const base =
+    "inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset";
+
+  if (status === "confidential") {
+    return (
+      <span className={`${base} bg-brand-50 text-brand-500 ring-brand-200 dark:bg-brand-800/60 dark:text-brand-300 dark:ring-brand-700`}>
+        <LockIcon />
+        {t(ui.projects.status.confidential)}
+      </span>
+    );
+  }
+  if (status === "live") {
+    return (
+      <span className={`${base} bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-300 dark:ring-emerald-500/30`}>
+        <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+        {t(ui.projects.status.live)}
+      </span>
+    );
+  }
+  return (
+    <span className={`${base} bg-signal-50 text-signal-700 ring-signal-200 dark:bg-signal-400/10 dark:text-signal-300 dark:ring-signal-400/30`}>
+      <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signal-500 dark:bg-signal-400" />
+      {t(ui.projects.status.soon)}
+    </span>
+  );
+}
+
+/* ---------- Link renderer (graceful degradation preserved) ---------- */
 
 interface LinkConfig {
   link: ProjectLink;
@@ -47,6 +90,7 @@ interface LinkConfig {
 }
 
 function ProjectLinkButton({ link, label, icon, projectTitle }: LinkConfig) {
+  const { t } = useLang();
   if (link.type === "none") return null;
 
   const base =
@@ -58,8 +102,8 @@ function ProjectLinkButton({ link, label, icon, projectTitle }: LinkConfig) {
         href={link.href}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={`${label} — ${projectTitle} (opens in a new tab)`}
-        className={`${base} bg-brand-700 text-white hover:bg-brand-800`}
+        aria-label={`${label} — ${projectTitle} ${t(ui.projects.opensNewTab)}`}
+        className={`${base} bg-brand-800 text-white hover:bg-brand-900 dark:bg-brand-700 dark:hover:bg-brand-600`}
       >
         {icon}
         {label}
@@ -70,8 +114,7 @@ function ProjectLinkButton({ link, label, icon, projectTitle }: LinkConfig) {
   if (link.type === "private") {
     return (
       <span
-        title="Private — company-owned project"
-        aria-label={`${label} — private, company-owned project`}
+        aria-label={`${label} — ${t(ui.projects.privateAria)}`}
         className={`${base} cursor-not-allowed border border-brand-200/70 text-brand-400 dark:border-brand-700/60 dark:text-brand-500`}
       >
         <LockIcon />
@@ -83,137 +126,94 @@ function ProjectLinkButton({ link, label, icon, projectTitle }: LinkConfig) {
   // "soon" — clearly-marked placeholder to fill or remove later
   return (
     <span
-      title="Link coming soon"
-      aria-label={`${label} — coming soon`}
+      aria-label={`${label} — ${t(ui.projects.comingSoonAria)}`}
       className={`${base} cursor-default border border-dashed border-brand-300/80 text-brand-400 dark:border-brand-700 dark:text-brand-500`}
     >
       {icon}
       {label}
-      <span className="ml-0.5 text-xs font-normal opacity-70">(soon)</span>
+      <span className="ml-0.5 text-xs font-normal opacity-70">{t(ui.projects.soonSuffix)}</span>
     </span>
   );
 }
 
-/* ---------- Mock visual header (no real screenshots) ---------- */
+/* ---------- Dossier entry ---------- */
 
-function MockVisual({ project, index }: { project: Project; index: number }) {
-  const isPrivate = project.links.demo.type === "private";
-  const initials = project.org
-    .replace(/[^A-Za-z ]/g, "")
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase();
-
-  // Subtle per-card variation
-  const gradients = [
-    "from-brand-700 to-brand-900",
-    "from-brand-600 to-brand-800",
-    "from-brand-800 to-brand-950",
-    "from-brand-500 to-brand-700",
-  ];
+function ProjectCard({ project }: { project: Project }) {
+  const { t } = useLang();
+  const status = deriveStatus(project);
 
   return (
-    <div
-      aria-hidden="true"
-      className={`relative h-36 w-full overflow-hidden bg-gradient-to-br ${gradients[index % gradients.length]}`}
-    >
-      {/* grid + glow */}
-      <div
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage:
-            "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
-          backgroundSize: "28px 28px",
-        }}
-      />
-      <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
-      <div className="absolute inset-0 flex items-center justify-between px-6">
-        <span className="font-serif text-4xl font-semibold tracking-tight text-white/90">
-          {initials || "·"}
-        </span>
-        {isPrivate && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-black/25 px-2.5 py-1 text-xs font-medium text-white/90 backdrop-blur-sm">
-            <LockIcon />
-            Confidential
-          </span>
-        )}
+    <article className="group flex h-full flex-col rounded-2xl border border-brand-200/70 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-brand-300 hover:shadow-lg dark:border-brand-800/70 dark:bg-brand-900/40 dark:hover:border-brand-700">
+      <div className="flex items-center justify-between gap-3">
+        <span className="font-mono text-xs text-brand-400 dark:text-brand-500">{project.org}</span>
+        <StatusChip status={status} />
       </div>
-      <span className="absolute bottom-3 left-6 text-xs font-medium uppercase tracking-wider text-white/70">
-        {project.org}
-      </span>
-    </div>
-  );
-}
 
-/* ---------- Card ---------- */
+      <h3 className="mt-3 font-serif text-xl font-semibold leading-snug text-brand-800 text-balance dark:text-white">
+        {t(project.title)}
+      </h3>
+      <p className="mt-1 text-sm font-medium text-brand-500 dark:text-brand-300">
+        {t(project.tagline)}
+      </p>
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
-  return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-brand-200/70 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-brand-300 hover:shadow-lg dark:border-brand-800/70 dark:bg-brand-900/40 dark:hover:border-brand-700">
-      <MockVisual project={project} index={index} />
+      <p className="mt-4 text-sm leading-relaxed text-brand-600/90 text-pretty dark:text-brand-200/80">
+        {t(project.description)}
+      </p>
 
-      <div className="flex flex-1 flex-col p-6">
-        <h3 className="font-serif text-xl font-semibold text-brand-800 dark:text-white">
-          {project.title}
-        </h3>
-        <p className="mt-1 text-sm font-medium text-brand-500 dark:text-brand-300">
-          {project.tagline}
-        </p>
-
-        <p className="mt-4 text-sm leading-relaxed text-brand-600/90 text-pretty dark:text-brand-200/80">
-          {project.description}
-        </p>
-
-        <ul className="mt-5 flex flex-wrap gap-2">
-          {project.tech.map((t) => (
+      <div className="mt-5">
+        <span className="font-mono text-[0.7rem] text-brand-400 dark:text-brand-500">
+          {t(ui.projects.stackLabel)}
+        </span>
+        <ul className="mt-1.5 flex flex-wrap gap-1.5">
+          {project.tech.map((tech) => (
             <li
-              key={t}
-              className="rounded-md bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-600 ring-1 ring-inset ring-brand-100 dark:bg-brand-800/60 dark:text-brand-200 dark:ring-brand-700/50"
+              key={tech}
+              className="rounded-md bg-brand-50 px-2 py-0.5 font-mono text-xs font-medium text-brand-600 ring-1 ring-inset ring-brand-100 dark:bg-brand-800/60 dark:text-brand-200 dark:ring-brand-700/50"
             >
-              {t}
+              {tech}
             </li>
           ))}
         </ul>
+      </div>
 
-        <div className="mt-6 flex flex-1 flex-col justify-end">
-          <div className="flex flex-wrap gap-2">
-            <ProjectLinkButton link={project.links.demo} label="Live demo" icon={<ExternalIcon />} projectTitle={project.title} />
-            <ProjectLinkButton link={project.links.github} label="GitHub" icon={<GithubIcon />} projectTitle={project.title} />
-            <ProjectLinkButton link={project.links.screenshots} label="Screenshots" icon={<ImageIcon />} projectTitle={project.title} />
-          </div>
-
-          {project.note && (
-            <p className="mt-4 flex items-start gap-1.5 text-xs leading-relaxed text-brand-400 dark:text-brand-500">
-              <span className="mt-0.5 shrink-0">
-                <LockIcon />
-              </span>
-              {project.note}
-            </p>
-          )}
+      <div className="mt-6 flex flex-1 flex-col justify-end">
+        <div className="flex flex-wrap gap-2">
+          <ProjectLinkButton link={project.links.demo} label={t(ui.projects.links.demo)} icon={<ExternalIcon />} projectTitle={t(project.title)} />
+          <ProjectLinkButton link={project.links.github} label={t(ui.projects.links.github)} icon={<GithubIcon />} projectTitle={t(project.title)} />
+          <ProjectLinkButton link={project.links.screenshots} label={t(ui.projects.links.screenshots)} icon={<ImageIcon />} projectTitle={t(project.title)} />
         </div>
+
+        {project.note && (
+          <p className="mt-4 flex items-start gap-1.5 text-xs leading-relaxed text-brand-400 dark:text-brand-500">
+            <span className="mt-0.5 shrink-0">
+              <LockIcon />
+            </span>
+            {t(project.note)}
+          </p>
+        )}
       </div>
     </article>
   );
 }
 
 export function Projects() {
+  const { t } = useLang();
+
   return (
     <Section
       id="projects"
-      eyebrow="Projects"
-      title="Selected work"
-      intro="A few projects I've built end to end. Some were delivered inside companies and stay confidential — they're described at a high level, with repositories kept private."
+      index="03"
+      spine={t(ui.nav.projects)}
+      title={t(ui.sections.projects.title)}
+      intro={t(ui.sections.projects.intro)}
     >
-      <div className="grid gap-6 md:grid-cols-2">
-        {projects.map((project, i) => (
-          <Reveal key={project.title} delay={(i % 2) * 90} className="h-full">
-            <ProjectCard project={project} index={i} />
-          </Reveal>
-        ))}
-      </div>
+      <Reveal>
+        <div className="grid gap-5 md:grid-cols-2">
+          {projects.map((project) => (
+            <ProjectCard key={project.title.en} project={project} />
+          ))}
+        </div>
+      </Reveal>
     </Section>
   );
 }

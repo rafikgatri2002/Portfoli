@@ -1,3 +1,5 @@
+import type { LS } from "../i18n/types";
+
 /**
  * Project link states — cards degrade gracefully when a link is missing:
  *  - { type: "live", href }  → active button (paste the real URL here)
@@ -12,13 +14,15 @@ export type ProjectLink =
   | { type: "none" };
 
 export interface Project {
-  title: string;
+  title: LS;
+  /** Company / client — language-neutral proper noun. */
   org: string;
-  tagline: string;
-  description: string;
+  tagline: LS;
+  description: LS;
+  /** Language-neutral tech names. */
   tech: string[];
-  /** Shown as a small note under the card (e.g. confidentiality) */
-  note?: string;
+  /** Shown as a small note under the entry (e.g. confidentiality). */
+  note?: LS;
   links: {
     demo: ProjectLink;
     github: ProjectLink;
@@ -26,15 +30,28 @@ export interface Project {
   };
 }
 
+const confidentialNote: LS = {
+  fr: "Projet de stage — propriété de l'entreprise & confidentiel. Présenté à haut niveau avec des visuels indicatifs ; le dépôt reste privé.",
+  en: "Internship project — company-owned & confidential. Shown at a high level with mock visuals; repository stays private.",
+};
+
 export const projects: Project[] = [
   {
-    title: "Biometric Attendance Management",
+    title: {
+      fr: "Gestion de présence biométrique",
+      en: "Biometric Attendance Management",
+    },
     org: "KAMA CI",
-    tagline: "Fingerprint-based presence tracking with automated reporting.",
-    description:
-      "An end-to-end attendance system connected to fingerprint door controllers across the company's floors and departments. It records each employee's first badge of the day (with late detection) and keeps their last badge updated to compute precise working time, sends status-aware email alerts for lateness (OAuth2 / Exchange), and generates period and per-employee reports exportable to Excel & PDF — with an HR file per employee. Deployed via GitHub Actions CI/CD on Windows Server (IIS, NSSM).",
+    tagline: {
+      fr: "Suivi de présence par empreinte digitale et reporting automatisé.",
+      en: "Fingerprint-based presence tracking with automated reporting.",
+    },
+    description: {
+      fr: "Un système de présence de bout en bout relié aux contrôleurs d'accès à empreinte digitale répartis sur les étages et les services de l'entreprise. Il enregistre le premier badge de la journée de chaque employé (avec détection des retards) et tient à jour son dernier badge pour calculer un temps de travail précis, envoie des alertes email selon le statut en cas de retard (OAuth2 / Exchange) et génère des rapports par période et par employé, exportables en Excel & PDF — avec un dossier RH par employé. Déployé via GitHub Actions (CI/CD) sur Windows Server (IIS, NSSM).",
+      en: "An end-to-end attendance system connected to fingerprint door controllers across the company's floors and departments. It records each employee's first badge of the day (with late detection) and keeps their last badge updated to compute precise working time, sends status-aware email alerts for lateness (OAuth2 / Exchange), and generates period and per-employee reports exportable to Excel & PDF — with an HR file per employee. Deployed via GitHub Actions CI/CD on Windows Server (IIS, NSSM).",
+    },
     tech: ["FastAPI", "Angular", "MariaDB", "CI/CD", "Windows Server"],
-    note: "Internship project — company-owned & confidential. Shown at a high level with mock visuals; repository stays private.",
+    note: confidentialNote,
     links: {
       demo: { type: "private" },
       github: { type: "private" },
@@ -42,13 +59,21 @@ export const projects: Project[] = [
     },
   },
   {
-    title: "Material-Request & Payment Workflow",
+    title: {
+      fr: "Circuit de demande de matériel & paiement",
+      en: "Material-Request & Payment Workflow",
+    },
     org: "KAMA CI",
-    tagline: "Digitizing a paper, multi-level validation circuit.",
-    description:
-      "A workflow app that replaces a paper-based, hierarchical approval circuit with a strictly sequential digital flow: each validator is notified by email with a direct action link and only receives a request once the previous approver has signed off. Requests carry attachments and purchase orders through the whole chain, a second circuit handles payment validation (finance, accounting, cashier), and the complete file can be printed or exported faithfully to the company's official documents.",
+    tagline: {
+      fr: "Numérisation d'un circuit de validation papier, multi-niveaux.",
+      en: "Digitizing a paper, multi-level validation circuit.",
+    },
+    description: {
+      fr: "Une application de workflow qui remplace un circuit d'approbation hiérarchique sur papier par un flux numérique strictement séquentiel : chaque validateur est notifié par email avec un lien d'action direct et ne reçoit une demande qu'une fois l'approbateur précédent ayant signé. Les demandes transportent pièces jointes et bons de commande tout au long de la chaîne, un second circuit gère la validation des paiements (finance, comptabilité, caisse), et le dossier complet peut être imprimé ou exporté fidèlement aux documents officiels de l'entreprise.",
+      en: "A workflow app that replaces a paper-based, hierarchical approval circuit with a strictly sequential digital flow: each validator is notified by email with a direct action link and only receives a request once the previous approver has signed off. Requests carry attachments and purchase orders through the whole chain, a second circuit handles payment validation (finance, accounting, cashier), and the complete file can be printed or exported faithfully to the company's official documents.",
+    },
     tech: ["FastAPI", "React", "MariaDB", "Email notifications"],
-    note: "Internship project — company-owned & confidential. Shown at a high level with mock visuals; repository stays private.",
+    note: confidentialNote,
     links: {
       demo: { type: "private" },
       github: { type: "private" },
@@ -56,11 +81,19 @@ export const projects: Project[] = [
     },
   },
   {
-    title: "LOGIN Challenge — Smart Hospitality App",
-    org: "Client: Iberostar Hotels",
-    tagline: "A connected mobile app for sustainable, guest-friendly dining.",
-    description:
-      "Mobile front end for a real client challenge: food-waste tracking, room service with allergy management, and a social meal-sharing feed — all tied to a connected electronic wristband and a loyalty-points system. Built as part of a team delivering against a real brief from Iberostar.",
+    title: {
+      fr: "LOGIN Challenge — App hôtelière connectée",
+      en: "LOGIN Challenge — Smart Hospitality App",
+    },
+    org: "Iberostar Hotels",
+    tagline: {
+      fr: "Une app mobile connectée pour une restauration durable et agréable pour les clients.",
+      en: "A connected mobile app for sustainable, guest-friendly dining.",
+    },
+    description: {
+      fr: "Front-end mobile d'un challenge client réel : suivi du gaspillage alimentaire, room service avec gestion des allergies et fil social de partage de repas — le tout relié à un bracelet électronique connecté et à un système de points de fidélité. Réalisé en équipe, en réponse à un vrai brief d'Iberostar.",
+      en: "Mobile front end for a real client challenge: food-waste tracking, room service with allergy management, and a social meal-sharing feed — all tied to a connected electronic wristband and a loyalty-points system. Built as part of a team delivering against a real brief from Iberostar.",
+    },
     tech: ["React Native", "Mobile UI", "REST API"],
     links: {
       demo: { type: "soon" },
@@ -69,11 +102,19 @@ export const projects: Project[] = [
     },
   },
   {
-    title: "AI Automated Code-Review Platform",
+    title: {
+      fr: "Plateforme de revue de code assistée par IA",
+      en: "AI Automated Code-Review Platform",
+    },
     org: "Allence Tunisie",
-    tagline: "AI-assisted code review with project & merge-request tracking.",
-    description:
-      "A web platform for automated, AI-assisted code review: project management interfaces, merge-request tracking, REST API integrations, and serverless back-end logic running on AWS Lambda. Contributed across the front end and cloud functions while growing into DevOps practices (CI/CD, Docker).",
+    tagline: {
+      fr: "Revue de code assistée par IA, avec suivi des projets et des merge requests.",
+      en: "AI-assisted code review with project & merge-request tracking.",
+    },
+    description: {
+      fr: "Une plateforme web de revue de code automatisée et assistée par IA : interfaces de gestion de projet, suivi des merge requests, intégrations d'API REST et logique back-end serverless sur AWS Lambda. J'ai contribué côté front-end et fonctions cloud, tout en montant en compétences DevOps (CI/CD, Docker).",
+      en: "A web platform for automated, AI-assisted code review: project management interfaces, merge-request tracking, REST API integrations, and serverless back-end logic running on AWS Lambda. Contributed across the front end and cloud functions while growing into DevOps practices (CI/CD, Docker).",
+    },
     tech: ["Angular", "Python (Chalice)", "AWS Lambda", "REST API"],
     links: {
       demo: { type: "soon" },

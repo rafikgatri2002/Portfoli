@@ -1,55 +1,56 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="theme-color" content="#1f3a56" />
 
-    <!-- Primary meta tags -->
-    <title>Rafik Gatri — Full-Stack & Systems Developer</title>
+    <!-- Primary meta tags (French primary) -->
+    <title>Rafik Gatri — Développeur Full Stack & Systèmes</title>
     <meta
       name="description"
-      content="Rafik Gatri — full-stack developer (Angular, React, React Native, Node.js, Python/FastAPI) and systems/DevOps engineer based in Tunis. Available for part-time and freelance work."
+      content="Rafik Gatri — développeur full-stack (Angular, React, React Native, Node.js, Python/FastAPI) et ingénieur systèmes/DevOps basé à Tunis. Disponible pour des missions à temps partiel et en freelance."
     />
     <meta name="author" content="Rafik Gatri" />
     <meta
       name="keywords"
-      content="Rafik Gatri, full-stack developer, Angular, React, React Native, Node.js, FastAPI, Python, DevOps, Docker, CI/CD, Tunis, Tunisia, freelance developer"
+      content="Rafik Gatri, développeur full-stack, full-stack developer, Angular, React, React Native, Node.js, FastAPI, Python, DevOps, Docker, CI/CD, Tunis, Tunisie, développeur freelance"
     />
     <link rel="canonical" href="https://rafikgatri.vercel.app/" />
 
     <!-- Open Graph / Facebook / LinkedIn -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://rafikgatri.vercel.app/" />
-    <meta property="og:title" content="Rafik Gatri — Full-Stack & Systems Developer" />
+    <meta property="og:title" content="Rafik Gatri — Développeur Full Stack & Systèmes" />
     <meta
       property="og:description"
-      content="Full-stack developer & systems/DevOps engineer based in Tunis. Building complete management apps from data model to production. Open to part-time & freelance work."
+      content="Développeur full-stack & ingénieur systèmes/DevOps basé à Tunis. Je conçois des applications de gestion complètes, du modèle de données à la production. Ouvert aux missions à temps partiel et en freelance."
     />
     <meta property="og:image" content="https://rafikgatri.vercel.app/og-image.svg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale:alternate" content="en_US" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Rafik Gatri — Full-Stack & Systems Developer" />
+    <meta name="twitter:title" content="Rafik Gatri — Développeur Full Stack & Systèmes" />
     <meta
       name="twitter:description"
-      content="Full-stack developer & systems/DevOps engineer based in Tunis. Open to part-time & freelance work."
+      content="Développeur full-stack & ingénieur systèmes/DevOps basé à Tunis. Ouvert aux missions à temps partiel et en freelance."
     />
     <meta name="twitter:image" content="https://rafikgatri.vercel.app/og-image.svg" />
 
-    <!-- Fonts: preconnect + Inter (sans) + Fraunces (display serif) -->
+    <!-- Fonts: preconnect + Inter (sans) + Fraunces (display serif) + IBM Plex Mono (technical meta) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
-    <!-- Avoid dark-mode flash: set theme class before paint -->
+    <!-- Avoid dark-mode flash + match stored language before paint -->
     <script>
       (function () {
         try {
@@ -57,6 +58,13 @@
           var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
           if (stored === "dark" || (!stored && prefersDark)) {
             document.documentElement.classList.add("dark");
+          }
+        } catch (e) {}
+        try {
+          var lang = localStorage.getItem("lang");
+          // French is the default; only override when a stored value differs.
+          if (lang === "fr" || lang === "en") {
+            document.documentElement.lang = lang;
           }
         } catch (e) {}
       })();
