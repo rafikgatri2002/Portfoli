@@ -21,6 +21,8 @@ export interface Project {
   description: LS;
   /** Language-neutral tech names. */
   tech: string[];
+  /** Optional inline screenshot gallery — public asset paths, shown as a strip on the card. */
+  gallery?: string[];
   /** Shown as a small note under the entry (e.g. confidentiality). */
   note?: LS;
   links: {
@@ -36,6 +38,34 @@ const confidentialNote: LS = {
 };
 
 export const projects: Project[] = [
+  {
+    title: {
+      fr: "IronLog — Suivi de musculation avec coach IA",
+      en: "IronLog — AI-Powered Workout Tracker",
+    },
+    org: "Projet personnel",
+    tagline: {
+      fr: "App mobile full-stack de suivi d'entraînement, avec un coach IA agentique.",
+      en: "Full-stack mobile training tracker with an agentic AI coach.",
+    },
+    description: {
+      fr: "Une application de fitness que j'ai conçue et développée de bout en bout, et que j'utilise moi-même. Mobile en React Native / Expo : journal des séances, détection automatique des records (PR), graphiques de progression et authentification JWT — distribuée en APK Android via EAS. Back-end FastAPI + MongoDB (Motor), testé avec pytest, conteneurisé (Docker) et déployé sur Microsoft Azure via CI/CD (GitHub Actions). Pièce maîtresse : un coach IA agentique (Google Gemini 2.5 Flash) capable d'enregistrer, planifier et replanifier les entraînements à ma place via function calling — toujours avec une confirmation humaine avant d'agir.",
+      en: "A fitness app I designed and built end to end, and use myself. Mobile in React Native / Expo: session logging, automatic PR detection, progress charts, and JWT auth — shipped as an Android APK via EAS. FastAPI + MongoDB (Motor) back end, tested with pytest, containerised with Docker, and deployed to Microsoft Azure via CI/CD (GitHub Actions). The centrepiece: an agentic AI coach (Google Gemini 2.5 Flash) that can log, plan, and reschedule training on my behalf via function calling — always with human confirmation before it acts.",
+    },
+    tech: ["React Native", "Expo", "FastAPI", "MongoDB", "Docker", "CI/CD", "Azure", "Gemini AI"],
+    gallery: [
+      "/ironlog/ai-coach.jpg",
+      "/ironlog/log-session.jpg",
+      "/ironlog/coach-targets.jpg",
+      "/ironlog/progress.jpg",
+      "/ironlog/progress-chart.jpg",
+    ],
+    links: {
+      demo: { type: "live", href: "https://efitness-backend-2530307.azurewebsites.net/docs" },
+      github: { type: "live", href: "https://github.com/IronLogEfitness" },
+      screenshots: { type: "none" },
+    },
+  },
   {
     title: {
       fr: "Gestion de présence biométrique",

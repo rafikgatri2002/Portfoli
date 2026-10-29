@@ -176,6 +176,28 @@ function ProjectCard({ project }: { project: Project }) {
         </ul>
       </div>
 
+      {project.gallery && project.gallery.length > 0 && (
+        <div className="mt-5 flex gap-2 overflow-x-auto pb-1">
+          {project.gallery.map((src) => (
+            <a
+              key={src}
+              href={src}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${t(project.title)} — ${t(ui.projects.links.screenshots)}`}
+              className="shrink-0 overflow-hidden rounded-xl border border-brand-200/70 transition-transform hover:-translate-y-0.5 dark:border-brand-800/70"
+            >
+              <img
+                src={src}
+                alt={`${t(project.title)} ${t(ui.projects.links.screenshots)}`}
+                loading="lazy"
+                className="h-56 w-auto"
+              />
+            </a>
+          ))}
+        </div>
+      )}
+
       <div className="mt-6 flex flex-1 flex-col justify-end">
         <div className="flex flex-wrap gap-2">
           <ProjectLinkButton link={project.links.demo} label={t(ui.projects.links.demo)} icon={<ExternalIcon />} projectTitle={t(project.title)} />
