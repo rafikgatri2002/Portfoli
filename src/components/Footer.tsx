@@ -28,6 +28,14 @@ export function Footer() {
             {t(ui.footer.github)}
           </a>
           <a
+            href={profile.contact.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-brand-500 transition-colors hover:text-brand-900 dark:text-brand-400 dark:hover:text-white"
+          >
+            {t(ui.contact.labels.linkedin)}
+          </a>
+          <a
             href={`mailto:${profile.contact.email}`}
             className="text-brand-500 transition-colors hover:text-brand-900 dark:text-brand-400 dark:hover:text-white"
           >
