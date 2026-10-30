@@ -281,6 +281,19 @@ function ProjectCard({ project }: { project: Project }) {
       )}
 
       <div className="mt-6 flex flex-1 flex-col justify-end">
+        {project.apk && (
+          <a
+            href={project.apk}
+            download
+            className="mb-3 flex items-center justify-center gap-2 rounded-xl bg-brand-800 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-900 hover:shadow-md dark:bg-brand-700 dark:hover:bg-brand-600"
+          >
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 3v12M7 10l5 5 5-5M5 21h14" />
+            </svg>
+            {t(ui.projects.downloadApk)}
+            <span className="font-normal text-white/70">· {t(ui.projects.androidOnly)}</span>
+          </a>
+        )}
         <div className="flex flex-wrap gap-2">
           <ProjectLinkButton link={project.links.demo} label={t(ui.projects.links.demo)} icon={<ExternalIcon />} projectTitle={t(project.title)} />
           <ProjectLinkButton link={project.links.github} label={t(ui.projects.links.github)} icon={<GithubIcon />} projectTitle={t(project.title)} />

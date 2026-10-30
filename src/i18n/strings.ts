@@ -133,6 +133,8 @@ export const ui = {
     prevImage: { fr: "Image précédente", en: "Previous image" },
     nextImage: { fr: "Image suivante", en: "Next image" },
     closeImage: { fr: "Fermer l’aperçu", en: "Close preview" },
+    downloadApk: { fr: "Télécharger l’APK", en: "Download APK" },
+    androidOnly: { fr: "Android uniquement", en: "Android only" },
   },
 
   contact: {

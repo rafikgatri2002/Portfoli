@@ -23,6 +23,8 @@ export interface Project {
   tech: string[];
   /** Optional inline screenshot gallery — public asset paths, shown as a strip on the card. */
   gallery?: string[];
+  /** Optional direct APK download URL — shows a Download button on the card. */
+  apk?: string;
   /** Shown as a small note under the entry (e.g. confidentiality). */
   note?: LS;
   links: {
@@ -60,6 +62,7 @@ export const projects: Project[] = [
       "/ironlog/progress.jpg",
       "/ironlog/progress-chart.jpg",
     ],
+    apk: "https://github.com/IronLogEfitness/Efitness_frontend/releases/download/v1.0.5/ironlog.apk",
     links: {
       demo: { type: "live", href: "https://efitness-backend-2530307.azurewebsites.net/docs" },
       github: { type: "live", href: "https://github.com/IronLogEfitness" },
