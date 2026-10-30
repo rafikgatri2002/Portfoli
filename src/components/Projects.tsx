@@ -203,7 +203,7 @@ function ProjectCard({ project }: { project: Project }) {
       {gallery.length > 0 && (
         <div className="mt-5">
           <div
-            className="relative flex items-center justify-center"
+            className="relative flex h-64 items-center justify-center overflow-hidden rounded-xl border border-brand-200/70 bg-brand-50/60 dark:border-brand-800/70 dark:bg-brand-900/30 sm:h-72"
             onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
             onTouchEnd={(e) => {
               if (touchX.current == null) return;
@@ -236,7 +236,7 @@ function ProjectCard({ project }: { project: Project }) {
               alt={`${t(project.title)} ${t(ui.projects.links.screenshots)}`}
               loading="lazy"
               onClick={() => setOpen(true)}
-              className="relative z-10 h-56 w-auto cursor-zoom-in rounded-xl border border-brand-200/70 shadow-sm dark:border-brand-800/70"
+              className="relative z-10 max-h-full max-w-full cursor-zoom-in object-contain"
             />
             {gallery.length > 1 && (
               <>
