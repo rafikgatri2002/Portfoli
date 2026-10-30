@@ -69,9 +69,8 @@ export const profile: Profile = {
     phoneHref: "+21654035246",
     github: "https://github.com/rafikgatri2002",
     githubLabel: "github.com/rafikgatri2002",
-    // Placeholder — update once the profile is live
-    linkedin: "https://www.linkedin.com/in/REPLACE-ME",
-    linkedinLabel: { fr: "LinkedIn (bientôt)", en: "LinkedIn (coming soon)" },
+    linkedin: "https://www.linkedin.com/in/rafikgatri2002",
+    linkedinLabel: { fr: "linkedin.com/in/rafikgatri2002", en: "linkedin.com/in/rafikgatri2002" },
   },
 
   // CV lives in /public; stays in French on purpose
