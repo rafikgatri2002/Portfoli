@@ -83,7 +83,7 @@ function ContactRow({ icon, label, value, href, external, action, muted }: Conta
       </span>
       <div className="min-w-0 flex-1">
         <p className="font-mono text-xs text-brand-400 dark:text-brand-500">{label}</p>
-        <p className="break-words">{valueEl}</p>
+        <p className="break-all">{valueEl}</p>
       </div>
       {action}
     </div>
