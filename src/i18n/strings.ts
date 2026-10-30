@@ -130,6 +130,8 @@ export const ui = {
     },
     comingSoonAria: { fr: "bientôt disponible", en: "coming soon" },
     stackLabel: { fr: "Stack", en: "Stack" },
+    prevImage: { fr: "Image précédente", en: "Previous image" },
+    nextImage: { fr: "Image suivante", en: "Next image" },
     closeImage: { fr: "Fermer l’aperçu", en: "Close preview" },
   },
 

@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Section } from "./ui/Section";
 import { Reveal } from "./ui/Reveal";
@@ -143,6 +143,11 @@ function ProjectCard({ project }: { project: Project }) {
   const { t } = useLang();
   const status = deriveStatus(project);
   const [zoom, setZoom] = useState<string | null>(null);
+  const [idx, setIdx] = useState(0);
+  const touchX = useRef<number | null>(null);
+  const gallery = project.gallery ?? [];
+  const go = (d: number) =>
+    setIdx((i) => (gallery.length ? (i + d + gallery.length) % gallery.length : 0));
 
   useEffect(() => {
     if (!zoom) return;
@@ -193,24 +198,80 @@ function ProjectCard({ project }: { project: Project }) {
         </ul>
       </div>
 
-      {project.gallery && project.gallery.length > 0 && (
-        <div className="mt-5 flex gap-2 overflow-x-auto pb-1">
-          {project.gallery.map((src) => (
-            <button
-              key={src}
-              type="button"
-              onClick={() => setZoom(src)}
-              aria-label={`${t(project.title)} — ${t(ui.projects.links.screenshots)}`}
-              className="shrink-0 cursor-zoom-in overflow-hidden rounded-xl border border-brand-200/70 transition-transform hover:-translate-y-0.5 dark:border-brand-800/70"
-            >
-              <img
-                src={src}
-                alt={`${t(project.title)} ${t(ui.projects.links.screenshots)}`}
-                loading="lazy"
-                className="h-56 w-auto"
-              />
-            </button>
-          ))}
+      {gallery.length > 0 && (
+        <div className="mt-5">
+          <div
+            className="relative flex items-center justify-center"
+            onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
+            onTouchEnd={(e) => {
+              if (touchX.current == null) return;
+              const dx = e.changedTouches[0].clientX - touchX.current;
+              if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+              touchX.current = null;
+            }}
+          >
+            {gallery.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  aria-hidden="true"
+                  tabIndex={-1}
+                  onClick={() => go(-1)}
+                  className="absolute inset-y-0 left-0 z-0 w-1/2 cursor-pointer"
+                />
+                <button
+                  type="button"
+                  aria-hidden="true"
+                  tabIndex={-1}
+                  onClick={() => go(1)}
+                  className="absolute inset-y-0 right-0 z-0 w-1/2 cursor-pointer"
+                />
+              </>
+            )}
+            <img
+              key={gallery[idx]}
+              src={gallery[idx]}
+              alt={`${t(project.title)} ${t(ui.projects.links.screenshots)}`}
+              loading="lazy"
+              onClick={() => setZoom(gallery[idx])}
+              className="relative z-10 h-56 w-auto cursor-zoom-in rounded-xl border border-brand-200/70 shadow-sm dark:border-brand-800/70"
+            />
+            {gallery.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  aria-label={t(ui.projects.prevImage)}
+                  onClick={() => go(-1)}
+                  className="absolute left-1.5 top-1/2 z-20 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/85 p-1.5 text-brand-700 shadow ring-1 ring-brand-200 backdrop-blur transition hover:bg-white dark:bg-brand-900/85 dark:text-brand-100 dark:ring-brand-700"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+                </button>
+                <button
+                  type="button"
+                  aria-label={t(ui.projects.nextImage)}
+                  onClick={() => go(1)}
+                  className="absolute right-1.5 top-1/2 z-20 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/85 p-1.5 text-brand-700 shadow ring-1 ring-brand-200 backdrop-blur transition hover:bg-white dark:bg-brand-900/85 dark:text-brand-100 dark:ring-brand-700"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+                </button>
+              </>
+            )}
+          </div>
+          {gallery.length > 1 && (
+            <div className="mt-2.5 flex justify-center gap-1.5">
+              {gallery.map((g, i) => (
+                <button
+                  key={g}
+                  type="button"
+                  aria-label={`${t(ui.projects.links.screenshots)} ${i + 1}`}
+                  onClick={() => setIdx(i)}
+                  className={`h-1.5 rounded-full transition-all ${
+                    i === idx ? "w-4 bg-brand-500" : "w-1.5 bg-brand-300 dark:bg-brand-700"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
 
