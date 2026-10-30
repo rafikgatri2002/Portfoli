@@ -142,7 +142,7 @@ function ProjectLinkButton({ link, label, icon, projectTitle }: LinkConfig) {
 function ProjectCard({ project }: { project: Project }) {
   const { t } = useLang();
   const status = deriveStatus(project);
-  const [zoom, setZoom] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
   const [idx, setIdx] = useState(0);
   const touchX = useRef<number | null>(null);
   const gallery = project.gallery ?? [];
@@ -150,9 +150,11 @@ function ProjectCard({ project }: { project: Project }) {
     setIdx((i) => (gallery.length ? (i + d + gallery.length) % gallery.length : 0));
 
   useEffect(() => {
-    if (!zoom) return;
+    if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setZoom(null);
+      if (e.key === "Escape") setOpen(false);
+      else if (e.key === "ArrowLeft") go(-1);
+      else if (e.key === "ArrowRight") go(1);
     };
     document.addEventListener("keydown", onKey);
     const previous = document.body.style.overflow;
@@ -161,7 +163,7 @@ function ProjectCard({ project }: { project: Project }) {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = previous;
     };
-  }, [zoom]);
+  }, [open]);
 
   return (
     <>
@@ -233,7 +235,7 @@ function ProjectCard({ project }: { project: Project }) {
               src={gallery[idx]}
               alt={`${t(project.title)} ${t(ui.projects.links.screenshots)}`}
               loading="lazy"
-              onClick={() => setZoom(gallery[idx])}
+              onClick={() => setOpen(true)}
               className="relative z-10 h-56 w-auto cursor-zoom-in rounded-xl border border-brand-200/70 shadow-sm dark:border-brand-800/70"
             />
             {gallery.length > 1 && (
@@ -292,29 +294,68 @@ function ProjectCard({ project }: { project: Project }) {
         )}
       </div>
     </article>
-    {zoom && createPortal(
+    {open && createPortal(
       <div
         role="dialog"
         aria-modal="true"
-        onClick={() => setZoom(null)}
+        onClick={() => setOpen(false)}
         className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm sm:p-6"
       >
         <button
           type="button"
-          onClick={() => setZoom(null)}
+          onClick={() => setOpen(false)}
           aria-label={t(ui.projects.closeImage)}
-          className="absolute right-3 top-3 rounded-full bg-white/10 p-2 text-white ring-1 ring-inset ring-white/30 transition-colors hover:bg-white/20 sm:right-5 sm:top-5"
+          className="absolute right-3 top-3 z-10 rounded-full bg-white/10 p-2 text-white ring-1 ring-inset ring-white/30 transition-colors hover:bg-white/20 sm:right-5 sm:top-5"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M18 6 6 18M6 6l12 12" />
           </svg>
         </button>
+        {gallery.length > 1 && (
+          <>
+            <button
+              type="button"
+              aria-label={t(ui.projects.prevImage)}
+              onClick={(e) => {
+                e.stopPropagation();
+                go(-1);
+              }}
+              className="absolute left-2 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/10 p-2 text-white ring-1 ring-inset ring-white/30 transition-colors hover:bg-white/20 sm:left-4"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+            </button>
+            <button
+              type="button"
+              aria-label={t(ui.projects.nextImage)}
+              onClick={(e) => {
+                e.stopPropagation();
+                go(1);
+              }}
+              className="absolute right-2 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/10 p-2 text-white ring-1 ring-inset ring-white/30 transition-colors hover:bg-white/20 sm:right-4"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+            </button>
+          </>
+        )}
         <img
-          src={zoom}
+          key={gallery[idx]}
+          src={gallery[idx]}
           alt={t(project.title)}
           onClick={(e) => e.stopPropagation()}
+          onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
+          onTouchEnd={(e) => {
+            if (touchX.current == null) return;
+            const dx = e.changedTouches[0].clientX - touchX.current;
+            if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+            touchX.current = null;
+          }}
           className="max-h-[90vh] max-w-[95vw] rounded-lg object-contain shadow-2xl"
         />
+        {gallery.length > 1 && (
+          <div className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2 rounded-full bg-black/40 px-2.5 py-1 text-xs font-medium text-white/90">
+            {idx + 1} / {gallery.length}
+          </div>
+        )}
       </div>,
       document.body
     )}
