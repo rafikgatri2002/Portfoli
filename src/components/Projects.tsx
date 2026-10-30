@@ -1,4 +1,5 @@
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { Section } from "./ui/Section";
 import { Reveal } from "./ui/Reveal";
 import { projects, type Project, type ProjectLink } from "../data/projects";
@@ -141,8 +142,24 @@ function ProjectLinkButton({ link, label, icon, projectTitle }: LinkConfig) {
 function ProjectCard({ project }: { project: Project }) {
   const { t } = useLang();
   const status = deriveStatus(project);
+  const [zoom, setZoom] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!zoom) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setZoom(null);
+    };
+    document.addEventListener("keydown", onKey);
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previous;
+    };
+  }, [zoom]);
 
   return (
+    <>
     <article className="group flex h-full flex-col rounded-2xl border border-brand-200/70 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-brand-300 hover:shadow-lg dark:border-brand-800/70 dark:bg-brand-900/40 dark:hover:border-brand-700">
       <div className="flex items-center justify-between gap-3">
         <span className="font-mono text-xs text-brand-400 dark:text-brand-500">{project.org}</span>
@@ -179,13 +196,12 @@ function ProjectCard({ project }: { project: Project }) {
       {project.gallery && project.gallery.length > 0 && (
         <div className="mt-5 flex gap-2 overflow-x-auto pb-1">
           {project.gallery.map((src) => (
-            <a
+            <button
               key={src}
-              href={src}
-              target="_blank"
-              rel="noopener noreferrer"
+              type="button"
+              onClick={() => setZoom(src)}
               aria-label={`${t(project.title)} — ${t(ui.projects.links.screenshots)}`}
-              className="shrink-0 overflow-hidden rounded-xl border border-brand-200/70 transition-transform hover:-translate-y-0.5 dark:border-brand-800/70"
+              className="shrink-0 cursor-zoom-in overflow-hidden rounded-xl border border-brand-200/70 transition-transform hover:-translate-y-0.5 dark:border-brand-800/70"
             >
               <img
                 src={src}
@@ -193,7 +209,7 @@ function ProjectCard({ project }: { project: Project }) {
                 loading="lazy"
                 className="h-56 w-auto"
               />
-            </a>
+            </button>
           ))}
         </div>
       )}
@@ -215,6 +231,33 @@ function ProjectCard({ project }: { project: Project }) {
         )}
       </div>
     </article>
+    {zoom && createPortal(
+      <div
+        role="dialog"
+        aria-modal="true"
+        onClick={() => setZoom(null)}
+        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm sm:p-6"
+      >
+        <button
+          type="button"
+          onClick={() => setZoom(null)}
+          aria-label={t(ui.projects.closeImage)}
+          className="absolute right-3 top-3 rounded-full bg-white/10 p-2 text-white ring-1 ring-inset ring-white/30 transition-colors hover:bg-white/20 sm:right-5 sm:top-5"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
+        <img
+          src={zoom}
+          alt={t(project.title)}
+          onClick={(e) => e.stopPropagation()}
+          className="max-h-[90vh] max-w-[95vw] rounded-lg object-contain shadow-2xl"
+        />
+      </div>,
+      document.body
+    )}
+    </>
   );
 }
 
