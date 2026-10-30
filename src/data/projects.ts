@@ -81,6 +81,18 @@ export const projects: Project[] = [
       en: "An end-to-end attendance system connected to fingerprint door controllers across the company's floors and departments. It records each employee's first badge of the day (with late detection) and keeps their last badge updated to compute precise working time, sends status-aware email alerts for lateness (OAuth2 / Exchange), and generates period and per-employee reports exportable to Excel & PDF — with an HR file per employee. Deployed via GitHub Actions CI/CD on Windows Server (IIS, NSSM).",
     },
     tech: ["FastAPI", "Angular", "MariaDB", "CI/CD", "Windows Server"],
+    gallery: [
+      "/kama/kama-01-presence.jpg",
+      "/kama/kama-02-retards.jpg",
+      "/kama/kama-03-absents.jpg",
+      "/kama/kama-04-employes.jpg",
+      "/kama/kama-05-bloques.jpg",
+      "/kama/kama-06-periode.jpg",
+      "/kama/kama-07-email-avertissement.jpg",
+      "/kama/kama-08-email-dernier-avert.jpg",
+      "/kama/kama-09-email-invitation-rh.jpg",
+      "/kama/kama-10-email-rh.jpg",
+    ],
     note: confidentialNote,
     links: {
       demo: { type: "private" },
