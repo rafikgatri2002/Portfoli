@@ -203,7 +203,7 @@ function ProjectCard({ project }: { project: Project }) {
       {gallery.length > 0 && (
         <div className="mt-5">
           <div
-            className="relative flex h-64 items-center justify-center overflow-hidden rounded-xl border border-brand-200/70 bg-brand-50/60 dark:border-brand-800/70 dark:bg-brand-900/30 sm:h-72"
+            className="relative h-64 overflow-hidden rounded-xl border border-brand-200/70 bg-brand-50/60 dark:border-brand-800/70 dark:bg-brand-900/30 sm:h-72"
             onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
             onTouchEnd={(e) => {
               if (touchX.current == null) return;
@@ -212,34 +212,37 @@ function ProjectCard({ project }: { project: Project }) {
               touchX.current = null;
             }}
           >
+            <div
+              className="flex h-full transition-transform duration-300 ease-out"
+              style={{ transform: `translateX(-${idx * 100}%)` }}
+            >
+              {gallery.map((src) => (
+                <div key={src} className="flex h-full w-full shrink-0 items-center justify-center">
+                  <img
+                    src={src}
+                    alt={`${t(project.title)} ${t(ui.projects.links.screenshots)}`}
+                    loading="lazy"
+                    draggable={false}
+                    onClick={() => setOpen(true)}
+                    className="max-h-full max-w-full cursor-zoom-in object-contain"
+                  />
+                </div>
+              ))}
+            </div>
             {gallery.length > 1 && (
               <>
                 <button
                   type="button"
-                  aria-hidden="true"
-                  tabIndex={-1}
+                  aria-label={t(ui.projects.prevImage)}
                   onClick={() => go(-1)}
-                  className="absolute inset-y-0 left-0 z-0 w-1/2 cursor-pointer"
+                  className="absolute inset-y-0 left-0 z-10 w-[22%] cursor-pointer"
                 />
                 <button
                   type="button"
-                  aria-hidden="true"
-                  tabIndex={-1}
+                  aria-label={t(ui.projects.nextImage)}
                   onClick={() => go(1)}
-                  className="absolute inset-y-0 right-0 z-0 w-1/2 cursor-pointer"
+                  className="absolute inset-y-0 right-0 z-10 w-[22%] cursor-pointer"
                 />
-              </>
-            )}
-            <img
-              key={gallery[idx]}
-              src={gallery[idx]}
-              alt={`${t(project.title)} ${t(ui.projects.links.screenshots)}`}
-              loading="lazy"
-              onClick={() => setOpen(true)}
-              className="relative z-10 max-h-full max-w-full cursor-zoom-in object-contain"
-            />
-            {gallery.length > 1 && (
-              <>
                 <button
                   type="button"
                   aria-label={t(ui.projects.prevImage)}
@@ -299,8 +302,31 @@ function ProjectCard({ project }: { project: Project }) {
         role="dialog"
         aria-modal="true"
         onClick={() => setOpen(false)}
-        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm sm:p-6"
+        className="fixed inset-0 z-[60] overflow-hidden bg-black/80 backdrop-blur-sm"
       >
+        <div
+          className="flex h-full transition-transform duration-300 ease-out"
+          style={{ transform: `translateX(-${idx * 100}%)` }}
+          onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
+          onTouchEnd={(e) => {
+            if (touchX.current == null) return;
+            const dx = e.changedTouches[0].clientX - touchX.current;
+            if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+            touchX.current = null;
+          }}
+        >
+          {gallery.map((src) => (
+            <div key={src} className="flex h-full w-full shrink-0 items-center justify-center p-4 sm:p-8">
+              <img
+                src={src}
+                alt={t(project.title)}
+                draggable={false}
+                onClick={(e) => e.stopPropagation()}
+                className="max-h-[88vh] max-w-[94vw] rounded-lg object-contain shadow-2xl"
+              />
+            </div>
+          ))}
+        </div>
         <button
           type="button"
           onClick={() => setOpen(false)}
@@ -335,26 +361,10 @@ function ProjectCard({ project }: { project: Project }) {
             >
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
             </button>
+            <div className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2 rounded-full bg-black/40 px-2.5 py-1 text-xs font-medium text-white/90">
+              {idx + 1} / {gallery.length}
+            </div>
           </>
-        )}
-        <img
-          key={gallery[idx]}
-          src={gallery[idx]}
-          alt={t(project.title)}
-          onClick={(e) => e.stopPropagation()}
-          onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
-          onTouchEnd={(e) => {
-            if (touchX.current == null) return;
-            const dx = e.changedTouches[0].clientX - touchX.current;
-            if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
-            touchX.current = null;
-          }}
-          className="max-h-[90vh] max-w-[95vw] rounded-lg object-contain shadow-2xl"
-        />
-        {gallery.length > 1 && (
-          <div className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2 rounded-full bg-black/40 px-2.5 py-1 text-xs font-medium text-white/90">
-            {idx + 1} / {gallery.length}
-          </div>
         )}
       </div>,
       document.body
